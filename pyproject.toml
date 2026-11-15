@@ -1,0 +1,48 @@
+[project]
+name = "dsa-cap15-routing-multi-agentes"
+version = "0.1.0"
+description = "Projeto 5 - Construcao e Deploy de Routing com Multi-Agentes de IA (ambiente moderno com uv)"
+readme = "LEIAME.txt"
+requires-python = ">=3.12,<3.14"
+
+# ATENCAO, ALUNO: aqui usamos ">=" (limite inferior) e nao "==" (versao travada).
+# O requirements.txt original congelou 52 pacotes em abril/2025. Travar versao e
+# como tirar uma foto: envelhece. O ">=" diz "desta versao para cima", e o arquivo
+# uv.lock guarda a foto exata do que foi instalado hoje -- reprodutibilidade SEM
+# ficar preso a pacotes velhos.
+#
+# Repare que a lista e MUITO menor: o requirements.txt listava tudo que o pip
+# instalou (dependencias das dependencias). Aqui so o que o codigo usa de verdade;
+# o uv resolve o resto sozinho.
+dependencies = [
+    # --- App web ---
+    "streamlit>=1.67",      # Transforma o script em site, sem HTML/CSS
+
+    # --- Provedor original do capitulo ---
+    "groq>=1.7",            # Cliente oficial da Groq (era 0.22.0 no curso)
+
+    # --- Provedores extras (novos no ambiente moderno) ---
+    # OpenAI, xAI (Grok) e o Ollama local "falam o dialeto" da API da OpenAI: a
+    # MESMA biblioteca atende os tres, so muda o endereco (base_url).
+    "openai>=3.0",
+    "anthropic>=2.0" ,      # Claude tem API propria (precisa de um pequeno adaptador)
+
+    # --- Utilitarios ---
+    "python-dotenv>=1.2",   # Le o arquivo .env com as chaves de API
+]
+
+# "package = false": esta pasta e um PROJETO (scripts), nao uma BIBLIOTECA para
+# publicar no PyPI. Sem isso o uv tentaria "construir" o capitulo como pacote.
+[tool.uv]
+package = false
+
+# Dependencias de DESENVOLVIMENTO: o que voce usa para estudar (o notebook-aula no
+# VSCode), mas que o app em si nao precisa. 'uv sync' instala este grupo por
+# padrao; 'uv sync --no-dev' pula o grupo (util num servidor de deploy).
+[dependency-groups]
+dev = [
+    "ipykernel>=7.4",    # Registra o kernel do .venv no VSCode / Jupyter
+    "jupyter>=1.1",      # Alternativa: 'uv run jupyter lab' no navegador
+    "nbformat>=5.11",    # Validacao do notebook
+    "nbconvert>=7.17",   # Execucao do notebook pela linha de comando (testes)
+]
